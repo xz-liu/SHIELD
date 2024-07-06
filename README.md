@@ -87,3 +87,18 @@ To see the detailed arguments, please run the following command.
 python main.py --help
 ```
 
+# Citation
+
+Please cite our [paper](https://arxiv.org/abs/2406.12975) if you find the repository helpful.
+
+```
+@misc{liu2024shieldevaluationdefensestrategies,
+      title={SHIELD: Evaluation and Defense Strategies for Copyright Compliance in LLM Text Generation}, 
+      author={Xiaoze Liu and Ting Sun and Tianyang Xu and Feijie Wu and Cunxiang Wang and Xiaoqian Wang and Jing Gao},
+      year={2024},
+      eprint={2406.12975},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2406.12975}, 
+}
+```
