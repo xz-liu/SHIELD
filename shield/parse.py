@@ -48,6 +48,18 @@ def parse_args():
         help="Dataset to train ngram model. Set to 'none' to use the same dataset as the main model."
     )
     parser.add_argument(
+        "--agent_precheck",
+        type=str2bool,
+        default=True,
+        help="agent_precheck.",
+    )
+    parser.add_argument(
+        "--agent_postcheck",
+        type=str2bool,
+        default=False,
+        help="agent_postcheck.",
+    )
+    parser.add_argument(
         "--dump_gen",
         type=str2bool,
         default=True,
@@ -115,6 +127,12 @@ def parse_args():
         default=0.0,
     )
     parser.add_argument(
+        "--overwrite_copyright_status",
+        type=str,
+        choices=["P", "C", 'None'],
+        default='None',
+    )
+    parser.add_argument(
         '--multiple_rounds',
         type=int,
         default=1,
@@ -152,8 +170,8 @@ def parse_args():
         choices=['ngram', 'agent', 'plain'],
         help='defense type')
     parser.add_argument(
-        '--no_save', 
-        action='store_true', 
+        '--no_save',
+        action='store_true',
         help='not save results')
     parser.add_argument(
         '--cache_dir',
@@ -188,7 +206,7 @@ def parse_args():
         help='use ngram for agent')
 
     args = parser.parse_args()
-    
+
     if args.prompt_type == "a" or args.prompt_type == "b":
         args.eval_type = "lcs"
     elif args.prompt_type == "c":
@@ -197,7 +215,8 @@ def parse_args():
         args.eval_type = "ppl"
     else:
         raise Exception("no such prompt type")
-    
+
     return args
+
 
 args = parse_args()

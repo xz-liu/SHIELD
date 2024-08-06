@@ -76,6 +76,7 @@ class CachedVLLMWrapper:
 
 def run_open_model(args):
     dataset = get_dataset(args.dataset, args.prompt_type, args.jailbreak, args.jailbreak_num)
+    print("run open model")
     if args.ngram_dataset != 'none':
         ngram_dataset = get_dataset(args.ngram_dataset, args.prompt_type, args.jailbreak, args.jailbreak_num, args.poem_num)
     else:
@@ -93,14 +94,12 @@ def run_open_model(args):
         if args.defense_type == 'ngram':
             ngram_model = load_or_train_ngram_model(tokenizer, device, args, ngram_dataset)
             vllm_model = LLM(model=args.hf_model_id,
-                             dtype=get_dtype(args.dtype),
-                             max_model_len=args.max_new_tokens)
+                             dtype=get_dtype(args.dtype))
             vllm_model= CachedVLLMWrapper(vllm_model, args.hf_model_id)
             wrapper = NgramDefenseWrapper(args, vllm_model, ngram_model, tokenizer)
         elif args.defense_type == 'plain':
             vllm_model = LLM(model=args.hf_model_id,
-                             dtype=get_dtype(args.dtype),
-                             max_model_len=args.max_new_tokens)
+                             dtype=get_dtype(args.dtype))
             vllm_model= CachedVLLMWrapper(vllm_model, args.hf_model_id)
             wrapper = NgramDefenseWrapper(args, vllm_model, None, tokenizer)
         elif args.defense_type == 'agent':
@@ -164,13 +163,11 @@ def run_api_model(args):
 
 
 def main():
+    args.eval_type= "lcs"
     if args.api_model:
         run_api_model(args)
     else:
-        run_open_model(args)
-    # TODO vllm + eval ppl
-    if args.eval_type == "ppl":
-        raise NotImplementedError("VLLM + eval ppl not implemented yet.")
+        run_open_model(args) 
 
 if __name__ == "__main__":
     main()

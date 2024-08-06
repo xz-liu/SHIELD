@@ -1,3 +1,4 @@
+import time
 from typing import Dict, List, Tuple, Optional, Union
 
 import evaluate, datasets
@@ -12,6 +13,9 @@ from utils import *
 from dataset import Dataset, InputExample, ModelOutput, Completion
 from deprecated import deprecated
 from agent import *
+from time import perf_counter
+from  utils import *
+from parse import args
 
 
 def emergency_rewrite_prompts_for_multiple_rounds(prompt, prompt_type):
@@ -87,6 +91,9 @@ class AgentDefenseWrapper(DefenseWrapper):
             outputs_wo_lp = outputs_w_lp
         if not self.run_after_defense:
             outputs_w_lp = outputs_wo_lp
+
+        self.agent.output_avg_time()
+        self.agent.reset_time()
 
         return outputs_wo_lp, outputs_w_lp
 
@@ -196,12 +203,13 @@ class NgramDefenseWrapper(DefenseWrapper):
             jids += [int(item[1]) for item in dataset[i]["prompts"]]
 
         outputs_w_lp, outputs_wo_lp = None, None
+        tm1= perf_counter()
         if self.run_before_defense:
             lp_ngram = None
             outputs_wo_lp = self.batched_infer(prompts, jids, dataset, args.hf_model_id, dataset_len,
                                                batch_size=args.batch_size, lp=lp_ngram,
                                                multiple_rounds=args.multiple_rounds)
-
+        tm2= perf_counter()
         if not self.plain and self.run_after_defense:
             lp_ngram = [NGramLogitsProcessor(ngram_model=self.ngram_model, is_vllm=True, tokenizer=self.tokenizer)]
             outputs_w_lp = self.batched_infer(prompts, jids, dataset, args.hf_model_id, dataset_len,
@@ -211,12 +219,14 @@ class NgramDefenseWrapper(DefenseWrapper):
             print('Ngram hits time:', lp_ngram[0].ngram_hits_count)
         if self.plain:
             outputs_w_lp = outputs_wo_lp
+        tm3= perf_counter()
 
+        print("AVG TIME: before defense: ", (tm2-tm1)/dataset_len, " after defense: ", (tm3-tm2)/dataset_len)
         return outputs_wo_lp, outputs_w_lp
 
     def batched_infer(self, prompts, jids, dataset: Dataset, hf_model_id, dataset_len, batch_size, multiple_rounds=-1,
                       lp: List[NGramLogitsProcessor] = None):
-        sampling_params = SamplingParams(logits_processors=lp, temperature=0.0, max_tokens=args.max_new_tokens)
+        sampling_params = SamplingParams(logits_processors=lp, temperature=args.temperature, max_tokens=args.max_new_tokens)
         completions = []
         if lp is not None and len(lp) > 0:
             ngram_name = lp[0].ngram_model.dataset_name
@@ -233,6 +243,8 @@ class NgramDefenseWrapper(DefenseWrapper):
                 new_prompts_texts = prompts
                 for round_no in range(multiple_rounds - 1):
                     new_prompts_texts = [Dialog(items).apply_chat_template(self.tokenizer) for items in new_prompts]
+                    # print("-" * 10, "  Multiple Round Inference  ", "-" * 10, "Round", round_no + 1)
+                    # print(new_prompts_texts)
                     outputs = self.model.generate(new_prompts_texts, sampling_params=sampling_params, ngram=ngram_name)
                     for j in range(i, batch_end):
                         new_prompts[j - i].append(DialogItem("user",

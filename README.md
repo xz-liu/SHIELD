@@ -77,6 +77,7 @@ Explanation of the arguments:
 | dataset | The dataset to be used. Select from 'bsnc' and 'bep'. |
 | jailbreak | Set to 'general' for jailbreak, 'no' for no jailbreak. |
 | jailbreak_num | The number of jailbreaks to be used. Set to -1 for all jailbreak. |
+| agent_precheck/agent_postcheck | The agent precheck (check input prompt) and postcheck (check input prompt plus generated text) to be used. Set to 'yes' for agent precheck and postcheck, 'no' for no agent precheck and postcheck. 
 
 
 

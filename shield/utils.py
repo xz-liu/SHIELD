@@ -1,7 +1,7 @@
 # Description: This file contains utility functions that are used in the main script.
 import os
 import time
-from parse import args
+from parse import parse_args
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Union, Tuple
@@ -17,10 +17,11 @@ from langchain_core.messages.ai import AIMessage
 
 def get_dtype(dtype):
     import torch
+    args = parse_args()
     if args.dtype == "bf16":
-        return torch.bfloat16
+        return 'bfloat16'
     elif args.dtype == "fp16":
-        return torch.float16
+        return 'float16'
     else:
         raise Exception("unsupported dtype")
 
@@ -73,6 +74,7 @@ def save_to(path, content, backend='torch'):
     """
 
     time_now = time.perf_counter()
+    args = parse_args()
     if args.no_save:
         print('***** Not saving to file', path, 'because no_save is set to True')
         return
@@ -237,11 +239,12 @@ class Dialog:
 
 class ModelOutputCache:
 
-    def __init__(self, model_name):
+    def __init__(self, model_name, force_use_cache=False):
+        args = parse_args()
         self.model_name = model_name
         self.save_model_name = model_name.replace('/', '@')
-        self.use_cache = args.use_cache
-        self.user_lower_cache = args.use_lower_cache
+        self.use_cache = args.use_cache or force_use_cache
+        self.user_lower_cache = args.use_lower_cache or force_use_cache
         self.cache = self.load_cache()
 
         self.cache_lower = {}
@@ -256,6 +259,7 @@ class ModelOutputCache:
             print('ALERT! Not using cache for model', model_name)
 
     def load_cache(self):
+        args = parse_args()
         if not self.use_cache:
             return {}
         prompt2response = {}
@@ -310,6 +314,8 @@ class ModelOutputCache:
     def sync_cache(self, prompt, response):
         if not self.use_cache:
             return
+        
+        args = parse_args()
         cache_file_path = os.path.join(args.cache_dir, f'{self.save_model_name}.json')
         directory = os.path.dirname(cache_file_path)
         if not os.path.exists(directory):

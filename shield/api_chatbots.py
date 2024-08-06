@@ -116,15 +116,7 @@ class APIModelTokenizerDummy:
         chat_template = ChatPromptTemplate.from_messages(self._convert_msg_like(msg_list))
         return chat_template.format()
 
-
-# def search_copyright_status_with_pplx(title):
-#     '''
-#     Search the copyright status of a book with Perplexity API llama-3-sonar-large-32k-online
-#     '''
-#     wrapper = APIModelsWrapper('llama-3-sonar-large-32k-online', sleep_time=4)
-#     prompt = f'You are a helpful assistant. Can you tell me the copyright status of the book {title}? Answer with a JSON String, containing the following:
-#     return wrapper.invoke(prompt)
-
+ 
 
 if __name__ == '__main__':
     wrapper = APIModelsWrapper('gpt-3.5-turbo')
