@@ -20,20 +20,20 @@ from utils import ModelOutputCache
 
 # PPLX_API_KEY, OPENAI_API_KEY, ANTHROPIC_API_KEY, OPENAI_ORGANIZATION
 class APIModelsWrapper:
-    def __init__(self, model_name: str, sleep_time=None):
+    def __init__(self, model_name: str, sleep_time=None,   force_use_cache=False):
         if sleep_time is None:
             sleep_time = args.api_model_sleep_time
         if 'sonar' in model_name:
             assert os.getenv('PPLX_API_KEY') is not None, 'PPLX_API_KEY is not set'
-            self.model = ChatPerplexity(temperature=0, model=model_name)
+            self.model = ChatPerplexity(temperature=args.temperature, model=model_name)
         elif model_name.startswith('gpt'):
             assert os.getenv('OPENAI_API_KEY') is not None
             assert os.getenv('OPENAI_ORGANIZATION') is not None
-            self.model = ChatOpenAI(temperature=0, api_key=os.getenv('OPENAI_API_KEY'), model
+            self.model = ChatOpenAI(temperature=args.temperature, api_key=os.getenv('OPENAI_API_KEY'), model
             =model_name, organization=os.getenv('OPENAI_ORGANIZATION'))
         elif model_name.startswith('claude'):
             assert os.getenv('ANTHROPIC_API_KEY') is not None
-            self.model = ChatAnthropic(temperature=0, model=model_name)
+            self.model = ChatAnthropic(temperature=args.temperature, model=model_name)
         elif model_name.startswith('gemini'):
             # if GEMINI_API_KEY is set, use it, or use the GOOGLE API KEY
             assert os.getenv('GEMINI_API_KEY') is not None or os.getenv('GOOGLE_API_KEY') is not None
@@ -42,11 +42,11 @@ class APIModelsWrapper:
             else:
                 api_key = os.getenv('GOOGLE_API_KEY')
             self.model = ChatGoogleGenerativeAI(model=model_name, google_api_key=os.getenv('GEMINI_API_KEY'),
-                                                temperature=0, convert_system_message_to_human=True)
+                                                temperature=args.temperature, convert_system_message_to_human=True)
         else:
             raise ValueError('Model name not recognized')
         self.model_name = model_name
-        self.cache = ModelOutputCache(model_name)
+        self.cache = ModelOutputCache(model_name, force_use_cache=force_use_cache)
         self.sleep_time = sleep_time
         self.gemini_backups = 0
 
@@ -83,7 +83,7 @@ class APIModelsWrapper:
                 resp = self.model.invoke(prompt_str)
 
             else:
-                raise RuntimeError("Unknown Error", e)
+                raise RuntimeError("Fuck, Unknown Error", e)
 
 
         self.cache[prompt_str] = resp
@@ -108,7 +108,7 @@ class APIModelTokenizerDummy:
             elif msg['role'] == 'assistant':
                 new_msgs.append(('ai', msg['content']))
             else:
-                raise ValueError(msg)
+                raise ValueError('WTF is', msg)
 
         return new_msgs
 
@@ -116,6 +116,14 @@ class APIModelTokenizerDummy:
         chat_template = ChatPromptTemplate.from_messages(self._convert_msg_like(msg_list))
         return chat_template.format()
 
+
+# def search_copyright_status_with_pplx(title):
+#     '''
+#     Search the copyright status of a book with Perplexity API llama-3-sonar-large-32k-online
+#     '''
+#     wrapper = APIModelsWrapper('llama-3-sonar-large-32k-online', sleep_time=4)
+#     prompt = f'You are a helpful assistant. Can you tell me the copyright status of the book {title}? Answer with a JSON String, containing the following:
+#     return wrapper.invoke(prompt)
 
 
 if __name__ == '__main__':
