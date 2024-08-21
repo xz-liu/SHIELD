@@ -14,6 +14,7 @@ Large Language Models (LLMs) have transformed machine learning but raised signif
 
 The BS-NC and BEP datasets are made public in this repository. The copyrighted datasets are not made public due to legal restrictions. Send an email to [xiaoze@purdue.edu](mailto:xiaoze@purdue.edu) to request further information. 
 
+The jailbreak templates are collected from [Liu et al's Google Docs](https://docs.google.com/spreadsheets/d/1s8LtY4nM0C-ufFgM2CC6hRzH6FI592BI/edit?usp=sharing&ouid=115869021074995548314&rtpof=true&sd=true). Please refer to [their paper](https://arxiv.org/abs/2305.13860) for details.
 
 ## Setup Environment
 
