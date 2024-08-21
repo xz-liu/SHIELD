@@ -80,7 +80,7 @@ Explanation of the arguments:
 | prompt_type | The prompt type to be used. Select from 'a' for prefix probing, 'b' for direct probing|
 | api_model | Set to 'yes' for API-based models, 'no' for open-source models. |
 | hf_model_id | The Hugging Face model ID is to be used for open-source models. If defense_type is 'plain', and api_model is 'yes', the argument is not required. If defense_type is 'agent' or 'ngram', the argument is required. The model ID is also used as the tokenizer of n-gram defense. |
-| api_model_name | The API model name to be used for API-based models.|
+| api_model_name | The API model name to be used for API-based models.  |
 | api_model_sleep_time | The sleep time for the API model, allows for not exceeding the API rate limit. |
 | dataset | The dataset to be used. Select from 'bsnc' and 'bep'. |
 | jailbreak | Set to 'general' for jailbreak, 'no' for no jailbreak. |
