@@ -50,6 +50,8 @@ export OPENAI_API_KEY=<API_KEY>
 export OPENAI_ORGANIZATION=<API_KEY>
 ```
 
+To access the gated models on huggingface, please login with [huggingface-cli](https://huggingface.co/docs/huggingface_hub/en/guides/cli) or set `HF_TOKEN`.
+
 ## Run
 
 For open-source models, use the following command to run the code.
@@ -71,22 +73,23 @@ Explanation of the arguments:
 | --- | --- |
 | max_dataset_num | The number of samples to evaluate. Set to 100 for all titles to be evaluated. |
 | batch_size | The batch size for the model. Please adjust according to the GPU memory. |
-| dtype | The data type for the model. FP16 or BF16 |
-| defense_type | The defense type to be used. Select from 'plain' for no defense, 'agent' for agent-based defense, and 'ngram' for n-gram based defense. |
+| dtype | The data type for the model. FP16 or BF16, default is FP16. |
+| temperature | The temperature of the model. The default is 0. |
+| defense_type | The defense type to be used. Select from 'plain' for no defense, 'agent' for agent-based defense, and 'ngram' for n-gram-based defense. |
 | prompt_type | The prompt type to be used. Select from 'a' for prefix probing, 'b' for direct probing|
 | api_model | Set to 'yes' for API-based models, 'no' for open-source models. |
-| hf_model_id | The Hugging Face model ID to be used for open-source models. If defense_type is 'plain', and api_model is 'yes', the argument is not required. If defense_type is 'agent' or 'ngram', the argument is required. The model ID is also used for tokenizer of n-gram defense. |
+| hf_model_id | The Hugging Face model ID is to be used for open-source models. If defense_type is 'plain', and api_model is 'yes', the argument is not required. If defense_type is 'agent' or 'ngram', the argument is required. The model ID is also used as the tokenizer of n-gram defense. |
 | api_model_name | The API model name to be used for API-based models.|
-| api_model_sleep_time | The sleep time for the API model, allow for not exceeding the API limit. |
+| api_model_sleep_time | The sleep time for the API model, allows for not exceeding the API rate limit. |
 | dataset | The dataset to be used. Select from 'bsnc' and 'bep'. |
 | jailbreak | Set to 'general' for jailbreak, 'no' for no jailbreak. |
-| jailbreak_num | The number of jailbreaks to be used. Set to -1 for all jailbreak. |
+| jailbreak_num | The number of jailbreaks to be used. Set to -1 for all jailbreaks. |
 | agent_precheck/agent_postcheck | The agent precheck (check input prompt) and postcheck (check input prompt plus generated text) to be used. Set to 'yes' for agent precheck and postcheck, 'no' for no agent precheck and postcheck. 
 
 
 
 
-To see the detailed arguments, please run the following command.
+To see the detailed arguments, you can run the following command.
     
 ```angular2html
 python main.py --help
