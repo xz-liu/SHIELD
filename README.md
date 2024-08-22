@@ -86,7 +86,7 @@ Explanation of the arguments:
 | jailbreak | Set to 'general' for jailbreak, 'no' for no jailbreak. |
 | jailbreak_num | The number of jailbreaks to be used. Set to -1 for all jailbreaks. |
 | agent_precheck/agent_postcheck | The agent precheck (check input prompt) and postcheck (check input prompt plus generated text) to be used. Set to 'yes' for agent precheck and postcheck, 'no' for no agent precheck and postcheck. 
-
+| overwrite_copyright_status | You can disable the copyright status verifier and overwrite all the input as 'C' (copyrighted) or 'P' (public domain). This is used to analysis the effectiveness of the few-shot prompts. In common usage, leave it to default value.|
 
 
 
