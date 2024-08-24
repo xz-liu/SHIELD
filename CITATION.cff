@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you find this project useful in your research or work, please consider citing it."
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Liu"
+    given-names: "Xiaoze"
+  - family-names: "Sun"
+    given-names: "Ting"
+  - family-names: "Xu"
+    given-names: "Tianyang"
+  - family-names: "Wu"
+    given-names: "Feijie"
+  - family-names: "Wang"
+    given-names: "Cunxiang"
+  - family-names: "Wang"
+    given-names: "Xiaoqian"
+  - family-names: "Gao"
+    given-names: "Jing"
+  title: "SHIELD: Evaluation and Defense Strategies for Copyright Compliance in LLM Text Generation"
+  year: 2024
+  journal: "arXiv preprint arXiv:2406.12975"
